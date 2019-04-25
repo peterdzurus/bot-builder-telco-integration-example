@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "\"echo \\\"Error\\\" && exit 1\""
+    "test": "\"echo \\\"Error\\\" && exit 1\"",
+    "start": "node index.js"
   },
   "author": "Peter Dzurus",
   "license": "ISC",
