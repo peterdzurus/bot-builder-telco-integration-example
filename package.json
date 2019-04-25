@@ -1,0 +1,14 @@
+{
+  "name": "mock-chatbot-integration",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "\"echo \\\"Error\\\" && exit 1\""
+  },
+  "author": "Peter Dzurus",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
