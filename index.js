@@ -15,15 +15,15 @@ app.listen(app.get('port'), function() {
 });
 
 app.get('/order/status', (req, res, next) => {
-  if (_.isEmpty(req.query)) {
+  var order = req.query.data.order;
+  if (_.isEmpty(req.query.data)) {
     res.json(
       messages.plainText(
         `No order number was provided, therefore I am not able to find it in the database. :(`
       )
     );
   }
-
-  console.log(`Params received: ${req.query.order}`)
+  console.log(`Params received: ${order}`)
   base('Orders')
     .select({
       view: 'Grid view'
@@ -36,8 +36,8 @@ app.get('/order/status', (req, res, next) => {
 
       if (
         !records.some(function(record) {
-          if (record.get('id') === req.query.order) {
-            res.json(messages.plainText(`Order #${req.query.order} = ${record.get('status')}`));
+          if (record.get('id') === order) {
+            res.json(messages.plainText(`Order #${order} = ${record.get('status')}`));
             console.log(`Order found: ${record.get('id')}`)
             return true;
           }
