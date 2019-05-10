@@ -23,6 +23,7 @@ app.get('/order/status', (req, res, next) => {
     );
   }
 
+  console.log(`Params received: ${req.query.order}`)
   base('Orders')
     .select({
       view: 'Grid view'
@@ -37,7 +38,7 @@ app.get('/order/status', (req, res, next) => {
         !records.some(function(record) {
           if (record.get('id') === req.query.order) {
             res.json(messages.plainText(`Order #${req.query.order} = ${record.get('status')}`));
-
+            console.log(`Order found: ${record.get('id')}`)
             return true;
           }
         })
