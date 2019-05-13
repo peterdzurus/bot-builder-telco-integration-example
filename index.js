@@ -14,16 +14,18 @@ app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
-app.get('/order/status', (req, res, next) => {
-  var order = req.query.data.order;
-  if (_.isEmpty(req.query.data)) {
+app.get('/order/:id/status', (req, res) => {
+  if (_.isEmpty(req.params)) {
     res.json(
       messages.plainText(
         `No order number was provided, therefore I am not able to find it in the database. :(`
       )
     );
+    return;
   }
-  console.log(`Params received: ${order}`)
+
+  var id = req.params.id;
+  console.log(`Params received: ${id}`);
   base('Orders')
     .select({
       view: 'Grid view'
@@ -36,9 +38,45 @@ app.get('/order/status', (req, res, next) => {
 
       if (
         !records.some(function(record) {
-          if (record.get('id') === order) {
-            res.json(messages.plainText(`Order #${order} = ${record.get('status')}`));
-            console.log(`Order found: ${record.get('id')}`)
+          if (record.get('id') === id) {
+            res.json(messages.plainText(`Order #${id} = ${record.get('status')}`));
+            console.log(`Order found: ${record.get('id')}`);
+            return true;
+          }
+        })
+      ) {
+        res.json(messages.plainText('Order not found.'));
+      }
+    });
+});
+
+app.get('user/:id/orders', (req, res) => {
+  if (_.isEmpty(req.params)) {
+    res.json(
+      messages.plainText(
+        `No user id was provided, therefore I am not able to find it in the database. :(`
+      )
+    );
+    return;
+  }
+
+  var id = req.params.id;
+  console.log(`Params received: ${id}`);
+  base('Orders')
+    .select({
+      view: 'Grid view'
+    })
+    .firstPage(function(err, records) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      if (
+        !records.some(function(record) {
+          if (record.get('customer_id') === id) {
+            res.json(messages.plainText(`Order #${id} = ${record.get('status')}`));
+            console.log(`Order found: ${record.get('id')}`);
             return true;
           }
         })
