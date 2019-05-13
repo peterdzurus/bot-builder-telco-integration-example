@@ -1,7 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var messages = require('./messages/types.js');
+var messageType = require('./messages/types.js');
 var _ = require('lodash');
 
 app.set('port', process.env.PORT || 3000);
@@ -17,7 +17,7 @@ app.listen(app.get('port'), function() {
 app.get('/order/:id/status', (req, res) => {
   if (_.isEmpty(req.params)) {
     res.json(
-      messages.plainText(
+      messageType.plainText(
         `No order number was provided, therefore I am not able to find it in the database. :(`
       )
     );
@@ -39,21 +39,21 @@ app.get('/order/:id/status', (req, res) => {
       if (
         !records.some(function(record) {
           if (record.get('id') === id) {
-            res.json(messages.plainText(`Order #${id} = ${record.get('status')}`));
+            res.json(messageType.plainText(`Order #${id} = ${record.get('status')}`));
             console.log(`Order found: ${record.get('id')}`);
             return true;
           }
         })
       ) {
-        res.json(messages.plainText('Order not found.'));
+        res.json(messageType.plainText('Order not found.'));
       }
     });
 });
 
-app.get('user/:id/orders', (req, res) => {
+app.get('/user/:id/orders', (req, res) => {
   if (_.isEmpty(req.params)) {
     res.json(
-      messages.plainText(
+      messageType.plainText(
         `No user id was provided, therefore I am not able to find it in the database. :(`
       )
     );
@@ -61,10 +61,12 @@ app.get('user/:id/orders', (req, res) => {
   }
 
   var id = req.params.id;
+  var cards = [];
   console.log(`Params received: ${id}`);
   base('Orders')
     .select({
-      view: 'Grid view'
+      view: 'Grid view',
+      filterByFormula: `{customer_id} = ${id}`
     })
     .firstPage(function(err, records) {
       if (err) {
@@ -72,16 +74,21 @@ app.get('user/:id/orders', (req, res) => {
         return;
       }
 
-      if (
-        !records.some(function(record) {
-          if (record.get('customer_id') === id) {
-            res.json(messages.plainText(`Order #${id} = ${record.get('status')}`));
-            console.log(`Order found: ${record.get('id')}`);
-            return true;
-          }
-        })
-      ) {
-        res.json(messages.plainText('Order not found.'));
+      if (_.isEmpty(records)) {
+        res.json(messageType.plainText(`You have no orders.`));
+        return;
+      } else {
+        res.json(
+          messageType.gallery(
+            records.map(record => {
+              return messageType.card(
+                record.get('status'),
+                record.get('value'),
+                'http://www.drifting-media.com/assets/0311_img_folder/why-shop-online.jpg'
+              );
+            })
+          )
+        );        
       }
     });
 });
