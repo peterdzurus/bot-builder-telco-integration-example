@@ -50,5 +50,5 @@ app.get('/order/status', (req, res, next) => {
 
 app.post('/order/change-status', (req, res, next) => {
   console.log(req.body);
-  res.json({});
+  res.json(req.body.data);
 });
