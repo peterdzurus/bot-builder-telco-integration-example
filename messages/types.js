@@ -14,16 +14,16 @@ module.exports = {
     return {
       title: title,
       subtitle: subtitle,
-      image: image
-      // buttons: [
-      //     {
-      //         text: 'Button 1 text',
-      //         action: {
-      //           type: 'url',
-      //           url: 'https://domain.com'
-      //       }
-      //     }
-      // ]
+      image: image,
+      buttons: [
+        {
+          text: 'Cancel (TBD)',
+          action: {
+            type: 'redirect',
+            flow_name: 'Cancel'
+          }
+        }
+      ]
     };
   },
 

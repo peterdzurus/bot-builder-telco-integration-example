@@ -88,12 +88,62 @@ app.get('/user/:id/orders', (req, res) => {
               );
             })
           )
-        );        
+        );
       }
     });
 });
 
-app.post('/order/change-status', (req, res, next) => {
-  console.log(req.body);
-  res.json(req.body.data);
+app.post('/user/:id', (req, res) => {
+  if (_.isEmpty(req.params)) {
+    res.json(
+      messageType.plainText(
+        `No user id was provided, therefore I am not able to find it in the database. :(`
+      )
+    );
+    return;
+  }
+
+  var id = req.params.id;
+  var recordId = '';
+  console.log(`Params received: ${id}`);
+
+  base('Customers')
+    .select({
+      view: 'Grid view',
+      filterByFormula: `{id} = ${id}`
+    })
+    .firstPage(function(err, records) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      if (_.isEmpty(records)) {
+        res.json(messageType.plainText(`There is no user found with id: ${id}`));
+        return;
+      }
+
+      recordId = records[0].id;
+      console.log(`Updating record: ${recordId}`);
+
+      base('Customers').update(
+        recordId,
+        {
+          ...req.body.data
+        },
+        function(err, record) {
+          if (err) {
+            console.error(err);
+            return;
+          }
+
+          console.log(record.get('email'));
+          res.json(
+            messageType.plainText(
+              `Changes were successfully saved.\n Changes: ${JSON.stringify(req.body.data)}`
+            )
+          );
+        }
+      );
+    });
 });
