@@ -125,7 +125,8 @@ app.post('/user/:id', (req, res) => {
 
       recordId = records[0].id;
       console.log(`Updating record: ${recordId}`);
-
+      console.log(`Changes: ${JSON.stringify(req.body.data)}`);
+      
       base('Customers').update(
         recordId,
         {
