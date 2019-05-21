@@ -50,11 +50,11 @@ app.get('/order/:id/status', (req, res) => {
     });
 });
 
-app.get('/user/:id/orders', (req, res) => {
+app.get('/customer/:id/orders', (req, res) => {
   if (_.isEmpty(req.params)) {
     res.json(
       messageType.plainText(
-        `No user id was provided, therefore I am not able to find it in the database. :(`
+        `No customer id was provided, therefore I am not able to find it in the database. :(`
       )
     );
     return;
@@ -93,11 +93,11 @@ app.get('/user/:id/orders', (req, res) => {
     });
 });
 
-app.post('/user/:id', (req, res) => {
+app.post('/customer/:id', (req, res) => {
   if (_.isEmpty(req.params)) {
     res.json(
       messageType.plainText(
-        `No user id was provided, therefore I am not able to find it in the database. :(`
+        `No customer id was provided, therefore I am not able to find it in the database. :(`
       )
     );
     return;
@@ -142,7 +142,7 @@ app.post('/user/:id', (req, res) => {
           console.log(record.get('email'));
           res.json(
             messageType.plainText(
-              `Changes were successfully saved.\n Changes: ${JSON.stringify(req.body.data)}`
+              `Data were successfully saved.\n Changes: ${JSON.stringify(req.body.data)}`
             )
           );
         }
