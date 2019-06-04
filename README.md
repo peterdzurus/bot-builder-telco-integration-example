@@ -1,4 +1,4 @@
-# Mock integration server 
+# [Example] Chatbot Integration Server
 
 Goal of this project is to demostrate usage of Chatbot Builder Custom Integrations API. (https://www.brandembassy.com/products/chatbot)
 
