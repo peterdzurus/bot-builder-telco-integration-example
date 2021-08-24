@@ -8,10 +8,27 @@ app.set('port', process.env.PORT || 3000);
 app.use(bodyParser.json());
 
 var Airtable = require('airtable');
-var base = new Airtable({ apiKey: 'keycjf3mEdHF1NPzx' }).base('appOpMipDmynu9Vwq');
+var base = new Airtable({ apiKey: 'keyJcVzvHrAZwNsaQ' }).base('appm0i698vLeFNi5T');
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
+});
+
+app.get('/customers', (req, res) => {
+  var id = req.params.id;
+  console.log(`Params received: ${id}`);
+  base('Database')
+    .select({
+      view: 'Grid view'
+    })
+    .firstPage(function(err, records) {
+      if (err) {
+        console.error(err);
+        return;
+      }
+
+      res.json(records);
+    });
 });
 
 app.get('/order/:id/status', (req, res) => {
